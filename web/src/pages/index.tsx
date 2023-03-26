@@ -1,6 +1,8 @@
 import Nav from "@/components/Nav";
 import styles from "@/styles/Home.module.css";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Head from "next/head";
+import Link from "next/link";
 import { useRef, useState } from "react";
 interface FormData {
   target: {
@@ -12,7 +14,11 @@ export function PillList({ list }: { list: string[] }) {
   return (
     <div className={styles.pillList}>
       {list.map((entry: string) => {
-        return <span className={styles.pill} key={entry}>{entry} </span>;
+        return (
+          <span className={styles.pill} key={entry}>
+            {entry}{" "}
+          </span>
+        );
       })}
     </div>
   );
@@ -20,16 +26,66 @@ export function PillList({ list }: { list: string[] }) {
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const fileUploadRef = useRef<HTMLInputElement>(null);
-  const [results, setResults] = useState<any>({
-    skills: ["html", "css"],
-    education: ["class of 2024"],
-    experience: [],
-    roles: [],
-  });
+
+  const [results, setResults] = useState<any>(null);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    setError(null);
+    setResults(null);
+    setSelectedJob(null);
+    // const exampleData = {
+    //   resumeParsedData: {
+    //     skills: ["html", "css"],
+    //   },
+    //   jobResults: [
+    //     {
+    //       title: "Software Engineer",
+    //       company: "Google",
+    //       location: "Mountain View, CA",
+    //       matchedAttributes: {
+    //         skills: ["html", "css"],
+    //       },
+    //       applicationLink: "https://google.com",
+    //     }
+    //   ]
+    // };
+    // setResults({
+    //   resumeParsedData: {
+    //     skills: ["html", "css"],
+    //   },
+    //   jobResults: [
+    //     {
+    //       title: "Software Engineer",
+    //       company: "Google",
+    //       location: "Mountain View, CA",
+    //       matchedAttributes: {
+    //         skills: ["html", "css"],
+    //       },
+    //       applicationLink: "https://google.com",
+    //     },
+    //   ],
+    // });
+    const fileInput = fileUploadRef.current;
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/resume`, {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setResults(data);
+        })
+        .catch((err) => {
+          setError("There was a problem while processing your resume.");
+        });
+    }
   };
 
   return (
@@ -45,6 +101,11 @@ export default function Home() {
         <div className={styles.section}>
           <div className={styles.form}>
             <h2>Upload Resume</h2>
+            {error ? (
+              <div className={styles.error}>
+                {error ? <p>{error}</p> : null}
+              </div>
+            ) : null}
             <form onSubmit={handleSubmit}>
               <input
                 ref={fileUploadRef}
@@ -58,32 +119,71 @@ export default function Home() {
           </div>
           <div className={styles.resumePreview}>
             <h2>Data Gathered</h2>
+            <br />
             {results ? (
               <>
                 <p>Resume File: {uploadedFile?.name}</p>
                 <br />
                 <h3>Skills</h3>
-                <PillList list={results.skills} />
+                <PillList list={results.resumeParsedData.skills} />
               </>
-            ) : null}
+            ) : (
+              <h3 className={styles.greyText}>Upload a Resume...</h3>
+            )}
           </div>
         </div>
         <div className={styles.section}>
           <div className={styles.jobsList}>
             <h2>Matched Jobs</h2>
             <br />
-            <div className={styles.jobListing}>
-              <div>
-                <h3>Job Title</h3>
-                <p>Company</p>
-                <p>Location</p>
-              </div>
-            </div>
+            {results ? (
+              results.jobResults.map((job: any, index: any) => {
+                <div className={styles.jobListing} key={index}>
+                  <div className={styles.jobListing__info}>
+                    <h3>{job.title}</h3>
+                    <p>{job.company}</p>
+                    <p>{job.location}</p>
+                  </div>
+                  <div className={styles.jobListing__actions}>
+                    <button
+                      className={styles.jobListing__button}
+                      onClick={() => {
+                        setSelectedJob(job) as any;
+                      }}
+                    >
+                      <ArrowForwardIcon />
+                    </button>
+                  </div>
+                </div>;
+              })
+            ) : (
+              <h3 className={styles.greyText}>Upload a Resume...</h3>
+            )}
           </div>
         </div>
         <div className={styles.section}>
           <div className={styles.jobsList}>
             <h2>Job Details</h2>
+            <br />
+            {selectedJob ? (
+              <>
+                <h2>{selectedJob.title}</h2>
+                <p>{selectedJob.company}</p>
+                <p>{selectedJob.location}</p>
+                <br />
+                <h3>Matching Skills</h3>
+                <PillList list={selectedJob.matchedSkills} />
+                <br />
+                <Link
+                  className={styles.submitButton}
+                  href={selectedJob.applicationLink}
+                >
+                  Apply
+                </Link>
+              </>
+            ) : (
+              <h3 className={styles.greyText}>Select a Job...</h3>
+            )}
           </div>
         </div>
       </main>

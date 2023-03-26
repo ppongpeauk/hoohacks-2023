@@ -6,7 +6,7 @@ export default function Nav() {
     <nav className={styles.nav}>
       <div>
         <Link href="/">
-          <h1>LinkedOut</h1>
+          <img src="/logo.png" alt="LinkedOut" width={128} />
         </Link>
       </div>
     </nav>
