@@ -4,6 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Head from "next/head";
 import Link from "next/link";
 import { useRef, useState } from "react";
+
 interface FormData {
   target: {
     resumeFile: File;
@@ -31,12 +32,14 @@ export default function Home() {
 
   const [results, setResults] = useState<any>(null);
   const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setError(null);
     setResults(null);
     setSelectedJob(null);
+    setLoading(true);
     // const exampleData = {
     //   resumeParsedData: {
     //     skills: ["html", "css"],
@@ -81,10 +84,15 @@ export default function Home() {
         .then((res) => res.json())
         .then((data) => {
           setResults(data);
+          setLoading(false);
         })
         .catch((err) => {
           setError("There was a problem while processing your resume.");
+          setLoading(false);
         });
+    } else {
+      setError("Please select a file to upload.");
+      setLoading(false);
     }
   };
 
@@ -100,7 +108,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.section}>
           <div className={styles.form}>
-            <h2>Upload Resume</h2>
+            <h2 className={styles.header}>Upload Resume</h2>
             {error ? (
               <div className={styles.error}>
                 {error ? <p>{error}</p> : null}
@@ -113,12 +121,13 @@ export default function Home() {
                 id="resumeFile"
                 type="file"
                 accept=".pdf"
+                disabled={loading}
               ></input>
-              <button className={styles.submitButton}>Search</button>
+              <button className={styles.submitButton} disabled={loading}>Search</button>
             </form>
           </div>
           <div className={styles.resumePreview}>
-            <h2>Data Gathered</h2>
+            <h2 className={styles.header}>Data Gathered</h2>
             <br />
             {results ? (
               <>
@@ -134,7 +143,7 @@ export default function Home() {
         </div>
         <div className={styles.section}>
           <div className={styles.jobsList}>
-            <h2>Matched Jobs</h2>
+            <h2 className={styles.header}>Matched Jobs</h2>
             <br />
             {results ? (
               results.jobResults.map((job: any) => {
@@ -163,7 +172,7 @@ export default function Home() {
         </div>
         <div className={styles.section}>
           <div className={styles.jobsList}>
-            <h2>Job Details</h2>
+            <h2 className={styles.header}>Job Details</h2>
             <br />
             {selectedJob ? (
               <>
