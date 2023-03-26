@@ -44,7 +44,7 @@ def resume():
             del job["description"]
 
         result = {}
-        result["resumeParsedData"] = {"skills": keywords[:5]} # TEMP MEASURE
+        result["resumeParsedData"] = {"skills": keywords}
         result["jobResults"] = jobs
         result = json.dumps(result)
 
