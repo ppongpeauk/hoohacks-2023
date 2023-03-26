@@ -1,3 +1,6 @@
 .env
 **/env
 node_modules
+**sample_jobs.json
+**sample_keywords.json
+**/uploads/*
