@@ -131,8 +131,6 @@ export default function Home() {
             <br />
             {results ? (
               <>
-                <p>Resume File: {uploadedFile?.name}</p>
-                <br />
                 <h3>Skills</h3>
                 <PillList list={results.resumeParsedData.skills} />
               </>

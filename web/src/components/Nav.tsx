@@ -6,7 +6,7 @@ export default function Nav() {
     <nav className={styles.nav}>
       <div>
         <Link href="/">
-          <img src="/logo.png" alt="LinkedOut" width={128} />
+          <h2>ResuMatch</h2>
         </Link>
       </div>
     </nav>

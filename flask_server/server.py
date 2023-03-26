@@ -22,7 +22,7 @@ openai.api_key = os.environ['OPENAI_API_KEY']
 UPLOAD_FOLDER = "./uploads"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-USE_SAMPLE_DATA = True
+USE_SAMPLE_DATA = False
 
 @app.route('/api/resume', methods=['GET', 'POST'])
 def resume():
