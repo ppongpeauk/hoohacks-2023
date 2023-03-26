@@ -4,7 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Head from "next/head";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { TailSpin } from 'react-loader-spinner'
+import { TailSpin } from "react-loader-spinner";
 
 interface FormData {
   target: {
@@ -125,11 +125,7 @@ export default function Home() {
                 disabled={loading}
               ></input>
               <button className={styles.submitButton} disabled={loading}>
-                {loading ? (
-                  <TailSpin height="24" color="#000"/>
-                ) : (
-                  "Search"
-                )}
+                {loading ? <TailSpin height="24" color="#000" /> : "Search"}
               </button>
             </form>
           </div>
@@ -154,21 +150,18 @@ export default function Home() {
               results.jobResults.map((job: any) => {
                 return (
                   <div className={styles.jobListing} key={job}>
-                    <div className={styles.jobListing__info}>
-                      <h3>{job.title}</h3>
-                      <p>{job.company}</p>
-                      <p>{job.location}</p>
-                    </div>
-                    <div className={styles.jobListing__actions}>
-                      <button
-                        className={styles.jobListing__button}
-                        onClick={() => {
-                          setSelectedJob(job) as any;
-                        }}
-                      >
-                        <ArrowForwardIcon />
-                      </button>
-                    </div>
+                    <button
+                      className={styles.jobListing__button}
+                      onClick={() => {
+                        setSelectedJob(job) as any;
+                      }}
+                    >
+                      <div className={styles.jobListing__info}>
+                        <h3>{job.title}</h3>
+                        <p>{job.company}</p>
+                        <p>{job.location}</p>
+                      </div>
+                    </button>
                   </div>
                 );
               })
