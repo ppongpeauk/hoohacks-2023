@@ -19,6 +19,7 @@
 
 .section {
   height: 100%;
+  width: 33%;
   border: 1px solid hsl(0, 0%, 87%);
   flex-grow: 1;
   margin: 8px;

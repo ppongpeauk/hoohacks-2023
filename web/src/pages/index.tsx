@@ -137,8 +137,8 @@ export default function Home() {
             <h2>Matched Jobs</h2>
             <br />
             {results ? (
-              results.jobResults.map((job: any, index: any) => {
-                <div className={styles.jobListing} key={index}>
+              results.jobResults.map((job: any) => {
+                return <div className={styles.jobListing} key={job}>
                   <div className={styles.jobListing__info}>
                     <h3>{job.title}</h3>
                     <p>{job.company}</p>
@@ -172,7 +172,7 @@ export default function Home() {
                 <p>{selectedJob.location}</p>
                 <br />
                 <h3>Matching Skills</h3>
-                <PillList list={selectedJob.matchedSkills} />
+                <PillList list={selectedJob.matchedAttributes.skills} />
                 <br />
                 <Link
                   className={styles.submitButton}
