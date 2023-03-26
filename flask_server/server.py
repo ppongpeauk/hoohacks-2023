@@ -47,7 +47,11 @@ def resume():
         result["resumeParsedData"] = {"skills": keywords}
         result["jobResults"] = jobs
         result = json.dumps(result)
-
+        try:
+            os.remove(pdf_file_path)
+        except Exception:
+            pass
+        
         return result
     return "Not a POST request"
 

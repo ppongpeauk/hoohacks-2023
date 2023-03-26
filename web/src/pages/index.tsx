@@ -4,6 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Head from "next/head";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { TailSpin } from 'react-loader-spinner'
 
 interface FormData {
   target: {
@@ -123,7 +124,13 @@ export default function Home() {
                 accept=".pdf"
                 disabled={loading}
               ></input>
-              <button className={styles.submitButton} disabled={loading}>Search</button>
+              <button className={styles.submitButton} disabled={loading}>
+                {loading ? (
+                  <TailSpin height="24" color="#000"/>
+                ) : (
+                  "Search"
+                )}
+              </button>
             </form>
           </div>
           <div className={styles.resumePreview}>
@@ -145,23 +152,25 @@ export default function Home() {
             <br />
             {results ? (
               results.jobResults.map((job: any) => {
-                return <div className={styles.jobListing} key={job}>
-                  <div className={styles.jobListing__info}>
-                    <h3>{job.title}</h3>
-                    <p>{job.company}</p>
-                    <p>{job.location}</p>
+                return (
+                  <div className={styles.jobListing} key={job}>
+                    <div className={styles.jobListing__info}>
+                      <h3>{job.title}</h3>
+                      <p>{job.company}</p>
+                      <p>{job.location}</p>
+                    </div>
+                    <div className={styles.jobListing__actions}>
+                      <button
+                        className={styles.jobListing__button}
+                        onClick={() => {
+                          setSelectedJob(job) as any;
+                        }}
+                      >
+                        <ArrowForwardIcon />
+                      </button>
+                    </div>
                   </div>
-                  <div className={styles.jobListing__actions}>
-                    <button
-                      className={styles.jobListing__button}
-                      onClick={() => {
-                        setSelectedJob(job) as any;
-                      }}
-                    >
-                      <ArrowForwardIcon />
-                    </button>
-                  </div>
-                </div>;
+                );
               })
             ) : (
               <h3 className={styles.greyText}>Upload a Resume...</h3>
