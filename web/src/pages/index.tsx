@@ -12,7 +12,7 @@ export function PillList({ list }: { list: string[] }) {
   return (
     <div className={styles.pillList}>
       {list.map((entry: string) => {
-        return <span className={styles.pill}>{entry} </span>;
+        return <span className={styles.pill} key={entry}>{entry} </span>;
       })}
     </div>
   );
