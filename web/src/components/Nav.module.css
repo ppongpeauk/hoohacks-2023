@@ -1,0 +1,21 @@
+.nav {
+  display: flex;
+  position: absolute;
+  background-color: #eee;
+  top: 0;
+  border: 1px solid #ddd;
+
+  justify-content: space-between;
+  padding: 24px;
+  align-items: center;
+  height: 96px;
+  width: 100vw;
+
+  z-index: 24;
+}
+
+.nav ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+}
