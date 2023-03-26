@@ -7,14 +7,8 @@
   top: 96px;
   width: 100vw;
   padding: 24px;
-  height: calc(100vh - 96px);
+  min-height: calc(100vh - 96px);
   box-sizing: border-box;
-}
-
-@media screen and (max-width: 768px) {
-  .main {
-    flex-direction: column;
-  }
 }
 
 .section {
@@ -24,6 +18,15 @@
   flex-grow: 1;
   margin: 8px;
   z-index: 4;
+}
+
+@media screen and (max-width: 768px) {
+  .main {
+    flex-direction: column;
+  }
+  .section {
+    width: 100%;
+  }
 }
 
 .section > * {
