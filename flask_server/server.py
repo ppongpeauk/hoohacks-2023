@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 from linkedin_api import Linkedin
@@ -12,6 +13,7 @@ import re
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 linkedin_api = Linkedin(os.environ['LINKEDIN_EMAIL'], os.environ['LINKEDIN_PASSWORD'])
@@ -20,10 +22,10 @@ openai.api_key = os.environ['OPENAI_API_KEY']
 UPLOAD_FOLDER = "./uploads"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-USE_SAMPLE_DATA = False
+USE_SAMPLE_DATA = True
 
-@app.route('/upload-pdf', methods=['GET', 'POST'])
-def upload_pdf():
+@app.route('/api/resume', methods=['GET', 'POST'])
+def resume():
     if request.method == 'POST':
         file = request.files['file']
         pdf_file_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
@@ -40,18 +42,14 @@ def upload_pdf():
         # remove "description" key from jobs
         for job in jobs:
             del job["description"]
-        
-        json_output = json.dumps({"jobs": jobs})
-        print(json_output)
 
-        return "saved"
+        result = {}
+        result["resumeParsedData"] = {"skills": keywords[:5]} # TEMP MEASURE
+        result["jobResults"] = jobs
+        result = json.dumps(result)
+
+        return result
     return "Not a POST request"
-
-# @app.route('/job-data')
-# def hello():
-#     keywords = request.args.get('keywords')
-#     limit = int(request.args.get('limit'))
-#     return get_job_data(keywords, limit)
 
 def get_keywords(pdf_file_path, use_sample_data=True):
     keywords = None
